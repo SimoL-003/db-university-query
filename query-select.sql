@@ -49,6 +49,6 @@ SELECT COUNT(id) AS n_departments
 FROM departments
 
 -- Quanti sono gli insegnanti che non hanno un numero di telefono?
-SELECT *
+SELECT COUNT(id) AS n_teachers
 FROM teachers
 WHERE phone IS NULL
