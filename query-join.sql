@@ -61,8 +61,8 @@ WHERE departments.name = "Dipartimento di Matematica"
 ORDER BY teachers.surname, teachers.name
 
 -- Selezionare, per ogni stuende, quanti tentativi d'esame ha sostenuto per superare ciascuno dei suoi esami
-SELECT students.id AS student_id, students.surname AS surname, students.name AS name, students.registration_number AS registration_number,
-exams.course_id AS course_id, courses.name AS course, COUNT(exams.id)
+SELECT students.id, students.surname, students.name, students.registration_number, MAX(exam_student.vote),
+courses.id AS course_id, courses.name AS course, COUNT(exams.id)
 FROM students
 INNER JOIN exam_student
 ON exam_student.student_id = students.id
@@ -71,5 +71,5 @@ ON exams.id = exam_student.exam_id
 INNER JOIN courses
 ON courses.id = exams.course_id
 GROUP BY students.id, exams.course_id
+HAVING MAX(exam_student.vote) >= 18
 ORDER BY students.surname, students.name, course_id
--- Mostra anche gli esami che non sono ancora stati superati
