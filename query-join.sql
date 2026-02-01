@@ -60,6 +60,7 @@ ON departments.id = degrees.department_id
 WHERE departments.name = "Dipartimento di Matematica"
 ORDER BY teachers.surname, teachers.name
 
+-- BONUS
 -- Selezionare, per ogni stuende, quanti tentativi d'esame ha sostenuto per superare ciascuno dei suoi esami
 SELECT students.id, students.surname, students.name, students.registration_number, MAX(exam_student.vote),
 courses.id AS course_id, courses.name AS course, COUNT(exams.id)
@@ -73,3 +74,37 @@ ON courses.id = exams.course_id
 GROUP BY students.id, exams.course_id
 HAVING MAX(exam_student.vote) >= 18
 ORDER BY students.surname, students.name, course_id
+
+-- Se trasformi le INNER JOIN in LEFT JOIN e togliendo la HAVING puoi aspettarti di vedere qualcosa di diverso? Se sì, cosa?
+    --  Togliendo HAVING vengono mostrati anche gli studenti che non hanno superato nessun esame; sostituendo LEFT a INNER vengono inclusi anche gli studenti che non hanno sostenuto esami
+
+
+-- Cosa cambia se invece di COUNT(exams.id) fai COUNT(*)?
+    -- Teoricamente non dovrebbe cambiare nulla
+
+-- Sapresti trovare il numero esatto di studenti che NON hanno ancora sostenuto esami? Come puoi sapere che è il numero corretto?
+
+SELECT COUNT(students.id)
+FROM students
+LEFT JOIN exam_student
+ON exam_student.student_id = students.id
+WHERE exam_student.exam_id IS NULL
+
+SELECT COUNT(students.id)
+FROM students
+LEFT JOIN exam_student
+ON exam_student.student_id = students.id
+GROUP BY exam_student.exam_id
+HAVING COUNT(exam_student.exam_id) = 0
+
+    -- Verifica:
+    SELECT *
+    FROM students
+    -- 5000 (studenti totali)
+
+    SELECT DISTINCT student_id
+    FROM exam_student
+    -- 4979 (studenti che hanno sostenuto almeno un esame)
+
+    -- Studenti che non hanno sostenuto esami: 21
+
